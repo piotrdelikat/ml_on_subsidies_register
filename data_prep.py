@@ -1,11 +1,10 @@
 import pandas as pd
-import numpy as np
 
 df = pd.read_csv('Subsidy_Register.csv', na_values='€ NaN')
-df.drop(['Established', 'Year'], axis=1, inplace=True)
+df.drop(['Name', 'Established', 'Year'], axis=1, inplace=True)
 
-
-#Cleaning
+subsidies_list = pd.read_csv('subsidies_list.csv', header=None)
+subsidies_list = subsidies_list[0].tolist()
 
 #Eur to integers
 to_int = ['Requested', 'Delivered']
@@ -13,6 +12,12 @@ for column in to_int:
     df[column].fillna(0, inplace=True)
     df[column] = df[column].replace('[\€|\.]', '', regex=True).astype(float)
 
+def specify_subsidy(row):
+    global subsidies_list
+    subsidies_list = [subsidy.lower() for subsidy in subsidies_list]
+    for subsidy in subsidies_list:
+        if subsidy in row['Arrangement']:
+            return subsidy
 
 def handle_non_numerical_data(df):
     to_numeric = ['Organization', 'Theme', 'Periodicity']
@@ -32,11 +37,10 @@ def handle_non_numerical_data(df):
     return df
 
 df = handle_non_numerical_data(df)
+
+df['Arrangement'] = df['Arrangement'].apply(str.lower)
+df['subsidy'] = df.apply(specify_subsidy, axis=1)
+df['description_length'] = df['Project'].apply(len)
+
 print(df.head())
-
-#Features: list Name [0|1], Project words to num, Project description length = new column,
-# Arrangement (subsidy program), Organization (district), Periodicity (0|1), Requested
-
-#Count the labels from delivered = % of requested
-#Normalize target
-
+# df.to_csv('cleaned.csv')
