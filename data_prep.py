@@ -1,3 +1,4 @@
+import numpy as np
 import pandas as pd
 
 df = pd.read_csv('Subsidy_Register.csv', na_values='€ NaN')
@@ -20,7 +21,7 @@ def specify_subsidy(row):
             return subsidy
 
 def handle_non_numerical_data(df):
-    to_numeric = ['Organization', 'Theme', 'Periodicity']
+    to_numeric = ['Organization', 'Theme', 'Periodicity', 'subsidy']
     for column in to_numeric:
         text_digit_vals = {}
         def convert_to_int(val):
@@ -36,11 +37,11 @@ def handle_non_numerical_data(df):
         df[column] = list(map(convert_to_int, df[column]))
     return df
 
-df = handle_non_numerical_data(df)
-
 df['Arrangement'] = df['Arrangement'].apply(str.lower)
 df['subsidy'] = df.apply(specify_subsidy, axis=1)
 df['description_length'] = df['Project'].apply(len)
 
+df = handle_non_numerical_data(df)
 print(df.head())
-# df.to_csv('cleaned.csv')
+
+# df.to_csv('cleaned.csv', encoding='utf-8')
