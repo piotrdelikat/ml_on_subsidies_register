@@ -42,6 +42,8 @@ df['subsidy'] = df.apply(specify_subsidy, axis=1)
 df['description_length'] = df['Project'].apply(len)
 
 df = handle_non_numerical_data(df)
-print(df.head())
+print(df.info())
+df = df.loc[df.duplicated(subset='subsidy', keep=False), :]
+print(df.info())
 
-# df.to_csv('cleaned.csv', encoding='utf-8')
+df.to_csv('cleaned.csv', encoding='utf-8')
