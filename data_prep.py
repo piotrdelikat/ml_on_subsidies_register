@@ -21,7 +21,7 @@ def specify_subsidy(row):
             return subsidy
 
 def handle_non_numerical_data(df):
-    to_numeric = ['Organization', 'Theme', 'Periodicity', 'subsidy']
+    to_numeric = ['Organization', 'Theme', 'Periodicity', 'Subsidy']
     for column in to_numeric:
         text_digit_vals = {}
         def convert_to_int(val):
@@ -33,17 +33,18 @@ def handle_non_numerical_data(df):
         for unique in unique_elements:
             if unique not in text_digit_vals:
                 text_digit_vals[unique] = x
-                x+=1
+                x += 1
         df[column] = list(map(convert_to_int, df[column]))
     return df
 
 df['Arrangement'] = df['Arrangement'].apply(str.lower)
-df['subsidy'] = df.apply(specify_subsidy, axis=1)
-df['description_length'] = df['Project'].apply(len)
+df['Subsidy'] = df.apply(specify_subsidy, axis=1)
+df['Subsidy_name'] = df['Subsidy']
+df['Description_len'] = df['Project'].apply(len)
 
 df = handle_non_numerical_data(df)
 print(df.info())
-df = df.loc[df.duplicated(subset='subsidy', keep=False), :]
-print(df.info())
+df = df.loc[df.duplicated(subset='Subsidy', keep=False), :]
+print(df.head())
 
 df.to_csv('cleaned.csv', encoding='utf-8')
