@@ -26,6 +26,9 @@ print(text_clf.score(X_test, y_test))
 
 predict = sys.argv[1]
 prediction = text_clf.predict(predict)
-print(prediction)
 
-#TODO: change number to subsidy name
+#change number to subsidy name
+for row in df[['Subsidy']].itertuples():
+    if row[1] == prediction:
+        print(df.iloc[row[0], 9])
+        break
