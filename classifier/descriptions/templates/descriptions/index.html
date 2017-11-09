@@ -1,0 +1,17 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Machine Learning Classifier on Subsidy List</title>
+</head>
+<body>
+<p>Provide short description of your project (in dutch) to get link to the most suitable subsidy for the project</p>
+
+<form action="." method="post">
+{% csrf_token %}
+<input type="text">
+<input type="submit" value="Get prediction"/>
+</form>
+
+</body>
+</html>
